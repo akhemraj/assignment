@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SHOP</title>
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script src="node_modules/web3/dist/web3.min.js"></script>
+</head>
+
+<body>
+    <div class="container" style="display: inline;">
+        <h1>Shopping</h1>
+        <div style="display: flex;">
+            <div style="display: inline-block; width: 25%;">
+                <img src="black-shoes.jpg"  width="200" height="200">
+                <button id="buy-shoes">Buy@ 3ETH</button>
+                <div style="display: inline-block;">
+                    <button id="get-shoes">Get Quantity</button>
+                    <label for="quantity" id="quant-shoes"></label>
+                </div>
+            </div>
+
+            <div style="display: inline-block; width: 25%;">
+                <img src="red-tshirt.jpeg" width="200" height="200">
+                <button id="buy-tshirt">Buy @1ETH</button>
+                <div style="display: inline-block;">
+                    <button id="get-tshirt">Get Quantity</button>
+                    <label for="quantity-t" id="quant-t"></label>
+                </div>
+            </div>
+
+            <div style="display: inline-block; width: 25%;">
+                <img src="white-shorts.jpeg" width="200" height="200">
+                <button id="buy-shorts">Buy @1ETH</button>
+                <div style="display: inline-block;">
+                    <button id="get-shorts">Get Quantity</button>
+                    <label for="quantity-w" id="quant-w"></label>
+                </div>            
+            </div>
+
+            <div style="display: inline-block; width: 25%;">
+                <img src="blue-jeans.jpeg" width="200" height="200">
+                <button id="buy-jeans">Buy @2ETH</button>
+                <div style="display: inline-block;">
+                    <button id="get-jeans">Get Quantity</button>
+                    <label for="quantity-j" id="quant-j"></label>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script>
+        var web3 = new Web3(Web3.givenProvider || "ws://localhost:7545");
+        console.log("web3", web3);
+
+        var jsonInterface = [
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "_name",
+                        "type": "string"
+                    }
+                ],
+                "name": "buyItem",
+                "outputs": [],
+                "stateMutability": "payable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "_name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_price",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_quantity",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "setItem",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "_name",
+                        "type": "string"
+                    }
+                ],
+                "name": "getItems",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "name": "items",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "price",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "quantity",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "_name",
+                        "type": "string"
+                    }
+                ],
+                "name": "totalItemsRemaining",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+        
+        var address = '0x21DBfDc1118449d2881A77e5F8e98c351A08ABFa';
+        // set provider for all later instances to use
+
+        var contract = new web3.eth.Contract(jsonInterface, address);
+        console.log("contract", contract);
+        web3.eth.defaultAccount ='0x180f831Ba03C471C707aa932b64B034432d2FaE8';
+
+        $("#buy-shoes").click(function () {
+            contract.methods.buyItem("Black  Shoes").send({from:'0x180f831Ba03C471C707aa932b64B034432d2FaE8', value:3000000000000000000}).then(function(res){
+                console.log("res", res);
+            });
+        });
+
+        $("#get-shoes").click(function () {
+            contract.methods.totalItemsRemaining("Black  Shoes").call().then(function(res){
+                console.log("res", res);
+                $("#quant-shoes").text(res);
+
+            });
+        });
+
+
+        $("#buy-tshirt").click(function () {
+            contract.methods.buyItem("Red Tshirt").send({from:'0x180f831Ba03C471C707aa932b64B034432d2FaE8', value:1000000000000000000});
+
+        });
+
+        $("#get-tshirt").click(function () {
+            contract.methods.totalItemsRemaining("Red Tshirt").call().then(function(res){
+                console.log("res", res);
+                $("#quant-t").text(res);
+
+            });
+        });
+
+        $("#buy-jeans").click(function () {
+            contract.methods.buyItem("Blue Jeans").send({from:'0x180f831Ba03C471C707aa932b64B034432d2FaE8', value:2000000000000000000});
+
+        });
+
+        $("#get-jeans").click(function () {
+            contract.methods.totalItemsRemaining("Blue Jeans").call().then(function(res){
+                console.log("res", res);
+                $("#quant-j").text(res);
+
+            });
+        });
+
+        $("#buy-shorts").click(function () {
+            contract.methods.buyItem("White Shorts").send({from:'0x180f831Ba03C471C707aa932b64B034432d2FaE8', value:1000000000000000000});
+
+        });
+
+        $("#get-shorts").click(function () {
+            contract.methods.totalItemsRemaining("White Shorts").call().then(function(res){
+                console.log("res", res);
+                $("#quant-w").text(res);
+
+            });
+        });
+        
+    </script>
+</body>
+
+</html>
